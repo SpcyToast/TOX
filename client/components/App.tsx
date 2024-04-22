@@ -8,47 +8,43 @@ function App() {
   const [board, setBoard] = useState(position)
   const [xIndex, setXIndex] = useState([-1, -1, -1])
   const [oIndex, setOIndex] = useState([-1, -1, -1])
-  const [win, setWin] = useState(false)
-  const [winner, setWinner] = useState('')
   const [count, setCount] = useState(0)
+  const [spot, setSpot] = useState(-1)
 
   useEffect(() => {
-    if (win) {
-      console.log(`${winner} wins!`)
-    }
-  }, [win, winner, board])
+    const newBoard = ['', '', '', '', '', '', '', '', '']
+    oIndex.map((add) => add !== -1 && newBoard.splice(add, 1, 'o'))
+    xIndex.map((add) => add !== -1 && newBoard.splice(add, 1, 'x'))
+    setBoard(newBoard)
+  }, [oIndex, xIndex])
 
-  function checkWin() {
-    setWin(false)
+  useEffect(() => {
+    if (board[spot] === '') {
+      const alter = turn ? [...oIndex] : [...xIndex]
+      alter.pop()
+      alter.unshift(spot)
+      turn ? setOIndex(alter) : setXIndex(alter)
+    }
+  }, [spot, turn, board])
+
+  useEffect(() => {
     const positions = turn ? oIndex.toSorted() : xIndex.toSorted()
     const player = turn ? 'o' : 'x'
     for (let i = 0; i < winCondition.length; i++) {
       if (
-        winCondition[i][0] === positions[0] &&
-        winCondition[i][1] === positions[1] &&
-        winCondition[i][2] === positions[2]
+        winCondition[i][0] == positions[0] &&
+        winCondition[i][1] == positions[1] &&
+        winCondition[i][2] == positions[2]
       ) {
-        setWin(true)
-        setWinner(player)
+        alert(`${player} wins!`)
       }
     }
-  }
+  }, [oIndex, xIndex, turn])
 
   function handleClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    if (board[Number(e.target.id)] === '') {
-      const alter = turn ? [...oIndex] : [...xIndex]
-      alter.pop()
-      alter.unshift(e.target.id)
-      turn ? setOIndex(alter) : setXIndex(alter)
-      const newBoard = [...position]
-      oIndex.map((add) => add !== -1 && newBoard.splice(add, 1, 'o'))
-      xIndex.map((add) => add !== -1 && newBoard.splice(add, 1, 'x'))
-      setBoard(newBoard)
-      setTurn(!turn)
-      setCount(1 + count)
-      checkWin()
-      console.log(board)
-    }
+    setSpot(Number(e.target.id))
+    setTurn(!turn)
+    setCount(1 + count)
   }
 
   return (
@@ -60,13 +56,13 @@ function App() {
             key={`pos ${i}`}
             id={String(i)}
             className="board-item"
-            onClick={(e) => handleClick(e)}
+            onClick={handleClick}
           >
             {spot}
           </button>
         ))}
       </div>
-      <footer>Turn: {count}</footer>
+      <footer>Turn: {turn ? 'x' : 'o'}</footer>
     </>
   )
 }
