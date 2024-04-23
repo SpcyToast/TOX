@@ -3,13 +3,14 @@ import winCondition from '../data/winConditions.json'
 
 function App() {
   const initalTurn = Math.floor(Math.random() * 2) === 0 ? true : false
-  const position = ['', '', '', '', '', '', '', '', '']
   const [turn, setTurn] = useState(initalTurn)
-  const [board, setBoard] = useState(position)
+  const [board, setBoard] = useState(['', '', '', '', '', '', '', '', ''])
   const [xIndex, setXIndex] = useState([-1, -1, -1])
   const [oIndex, setOIndex] = useState([-1, -1, -1])
   const [count, setCount] = useState(0)
   const [spot, setSpot] = useState(-1)
+  const [lock, setLock] = useState(true)
+  const [winner, setWinner] = useState('')
 
   useEffect(() => {
     const newBoard = ['', '', '', '', '', '', '', '', '']
@@ -36,10 +37,20 @@ function App() {
         winCondition[i][1] == positions[1] &&
         winCondition[i][2] == positions[2]
       ) {
-        alert(`${player} wins!`)
+        setLock(false)
+        setWinner(player)
       }
     }
   }, [oIndex, xIndex, turn])
+
+  function reset() {
+    setSpot(-1)
+    setOIndex([-1, -1, -1])
+    setXIndex([-1, -1, -1])
+    setWinner('')
+    setLock(true)
+    setBoard(['', '', '', '', '', '', '', '', ''])
+  }
 
   function handleClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     if (board[Number(e.target.id)] === '') {
@@ -68,13 +79,23 @@ function App() {
                     : 'board-item oPiece'
                   : 'board-item'
             }
-            onClick={handleClick}
+            onClick={(e) => lock && handleClick(e)}
           >
             {spot}
           </button>
         ))}
       </div>
-      <footer>Turn: {turn ? 'x' : 'o'}</footer>
+      <footer>
+        {winner !== '' ? 'Game Over' : turn ? 'Turn: X' : 'Turn: O'}
+      </footer>
+      {winner !== '' && (
+        <>
+          <p>{winner.toUpperCase()} Player Wins!</p>
+          <button className="reset" onClick={reset}>
+            <img className="reset" src="/reset.png" alt="reset button" />
+          </button>
+        </>
+      )}
     </>
   )
 }

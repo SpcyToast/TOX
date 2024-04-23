@@ -16,15 +16,21 @@
 }
 
 header {
-  font-size: xx-large;
-  text-align: center;
   margin-top: 50px;
   margin-bottom: 10px;
 }
+
 footer {
+  margin-top: 20px;
+}
+
+body {
   font-size: xx-large;
   text-align: center;
-  margin-top: 20px;
+}
+
+p {
+  margin: 10px;
 }
 
 .xPiece {
@@ -37,4 +43,11 @@ footer {
 
 .last {
   opacity: 50%;
+}
+
+.reset {
+  width: 50px;
+  height: auto;
+  border: none;
+  background: none;
 }
