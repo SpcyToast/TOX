@@ -42,9 +42,11 @@ function App() {
   }, [oIndex, xIndex, turn])
 
   function handleClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    setSpot(Number(e.target.id))
-    setTurn(!turn)
-    setCount(1 + count)
+    if (board[Number(e.target.id)] === '') {
+      setSpot(Number(e.target.id))
+      setTurn(!turn)
+      setCount(1 + count)
+    }
   }
 
   return (
@@ -55,7 +57,17 @@ function App() {
           <button
             key={`pos ${i}`}
             id={String(i)}
-            className="board-item"
+            className={
+              spot === 'x'
+                ? i === xIndex[2]
+                  ? 'board-item xPiece last'
+                  : 'board-item xPiece'
+                : spot === 'o'
+                  ? i === oIndex[2]
+                    ? 'board-item oPiece last'
+                    : 'board-item oPiece'
+                  : 'board-item'
+            }
             onClick={handleClick}
           >
             {spot}

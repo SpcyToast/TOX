@@ -26,3 +26,15 @@ footer {
   text-align: center;
   margin-top: 20px;
 }
+
+.xPiece {
+  color: red;
+}
+
+.oPiece {
+  color: blue;
+}
+
+.last {
+  opacity: 50%;
+}
